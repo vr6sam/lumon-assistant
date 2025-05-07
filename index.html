@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Lumon Assistant</title>
   <style>
     body {
@@ -22,10 +22,83 @@
     p {
       font-size: 1.2em;
     }
+    button {
+      background-color: #0f0;
+      color: #000;
+      padding: 10px 20px;
+      font-size: 1em;
+      cursor: pointer;
+      border: none;
+      margin-top: 20px;
+    }
+    #secretMessage {
+      display: none;
+      color: red;
+      font-size: 1.5em;
+      margin-top: 20px;
+    }
   </style>
 </head>
 <body>
   <h1>Welcome, Sam.</h1>
-  <p>Lumon is listening. What do you need?</p>
+  <p>Lumon is ready. Say "Start Listening" to begin.</p>
+  <button id="startButton">Start Listening</button>
+  <p id="output"></p>
+  <div id="secretMessage">⚠️ Secret Spy Mode Activated ⚠️</div>
+
+  <script>
+    const startButton = document.getElementById('startButton');
+    const output = document.getElementById('output');
+    const secretMessage = document.getElementById('secretMessage');
+
+    let recognition;
+
+    // Set up speech recognition
+    if ('webkitSpeechRecognition' in window) {
+      recognition = new webkitSpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        output.textContent = 'Listening...';
+      };
+
+      recognition.onerror = (event) => {
+        output.textContent = 'Error occurred: ' + event.error;
+      };
+
+      recognition.onresult = (event) => {
+        const command = event.results[0][0].transcript.toLowerCase();
+        output.textContent = 'You said: ' + command;
+        processCommand(command);
+      };
+    } else {
+      output.textContent = 'Speech recognition not supported.';
+    }
+
+    // Start listening when button is clicked
+    startButton.addEventListener('click', () => {
+      if (recognition) {
+        recognition.start();
+      }
+    });
+
+    // Process the command
+    function processCommand(command) {
+      if (command.includes('hello') || command.includes('hi')) {
+        output.textContent = 'Lumon says: Hello, Sam!';
+      } else if (command.includes('secret mode') || command.includes('spy mode')) {
+        output.textContent = 'Activating Spy Mode...';
+        secretMessage.style.display = 'block';
+        setTimeout(() => {
+          secretMessage.style.display = 'none';
+          output.textContent = 'Spy Mode Deactivated.';
+        }, 5000); // Secret mode lasts 5 seconds
+      } else {
+        output.textContent = 'Lumon doesn’t recognize that command.';
+      }
+    }
+  </script>
 </body>
 </html>
