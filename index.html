@@ -1,23 +1,15 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Lumon Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Lumon Spy Assistant</title>
   <style>
     body {
+      font-family: Arial, sans-serif;
       background-color: #000;
-      color: #0f0;
-      font-family: 'Courier New', Courier, monospace;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      margin: 0;
-    }
-    h1 {
-      font-size: 2em;
+      color: white;
+      text-align: center;
+      padding: 20px;
     }
     p {
       font-size: 1.2em;
@@ -31,25 +23,43 @@
       border: none;
       margin-top: 20px;
     }
-    #secretMessage {
+    #secretMessage, #spyPanel, #fileAccess, #camera, #stealthMode {
       display: none;
-      color: red;
-      font-size: 1.5em;
+    }
+    .stealth {
+      visibility: hidden;
+    }
+    .file {
       margin-top: 20px;
+      font-size: 1.3em;
     }
   </style>
 </head>
 <body>
-  <h1>Welcome, Sam.</h1>
-  <p>Lumon is ready. Say "Start Listening" to begin.</p>
+  <h1>Welcome, Sam. Lumon is listening.</h1>
+  <p>Say "Start Listening" to begin.</p>
   <button id="startButton">Start Listening</button>
   <p id="output"></p>
-  <div id="secretMessage">⚠️ Secret Spy Mode Activated ⚠️</div>
+  
+  <!-- Secret Spy Message -->
+  <div id="secretMessage">⚠️ Spy Mode Activated ⚠️</div>
+  
+  <!-- Hidden Spy Panel -->
+  <div id="spyPanel" style="color: #fff; background-color: #333; padding: 20px; margin-top: 20px;">
+    <h3>Top Secret Spy Operations:</h3>
+    <p id="fileAccess">Accessing top-secret files...</p>
+    <p id="camera">Activating Spy Camera...</p>
+    <p id="stealthMode">Stealth Mode: All systems hidden.</p>
+  </div>
 
   <script>
     const startButton = document.getElementById('startButton');
     const output = document.getElementById('output');
     const secretMessage = document.getElementById('secretMessage');
+    const spyPanel = document.getElementById('spyPanel');
+    const fileAccess = document.getElementById('fileAccess');
+    const camera = document.getElementById('camera');
+    const stealthMode = document.getElementById('stealthMode');
 
     let recognition;
 
@@ -91,10 +101,32 @@
       } else if (command.includes('secret mode') || command.includes('spy mode')) {
         output.textContent = 'Activating Spy Mode...';
         secretMessage.style.display = 'block';
-        setTimeout(() => {
-          secretMessage.style.display = 'none';
-          output.textContent = 'Spy Mode Deactivated.';
-        }, 5000); // Secret mode lasts 5 seconds
+        spyPanel.style.display = 'block';
+      } else if (command.includes('access files')) {
+        output.textContent = 'Accessing secret files...';
+        fileAccess.style.display = 'block';
+        setTimeout(() => { 
+          fileAccess.style.display = 'none'; 
+          output.textContent = 'Files secured.';
+        }, 5000);
+      } else if (command.includes('camera')) {
+        output.textContent = 'Spy Camera Activated...';
+        camera.style.display = 'block';
+        setTimeout(() => { 
+          camera.style.display = 'none'; 
+          output.textContent = 'Spy Camera Deactivated.';
+        }, 5000);
+      } else if (command.includes('stealth mode')) {
+        output.textContent = 'Stealth Mode: All systems hidden.';
+        stealthMode.style.display = 'block';
+        setTimeout(() => { 
+          stealthMode.style.display = 'none'; 
+          output.textContent = 'Stealth Mode Deactivated.';
+        }, 5000);
+      } else if (command.includes('deactivate spy mode')) {
+        output.textContent = 'Spy Mode Deactivated.';
+        secretMessage.style.display = 'none';
+        spyPanel.style.display = 'none';
       } else {
         output.textContent = 'Lumon doesn’t recognize that command.';
       }
